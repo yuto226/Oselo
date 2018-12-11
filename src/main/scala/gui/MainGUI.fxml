@@ -47,6 +47,5 @@
       <Label fx:id="victoryLabel" layoutX="362.0" layoutY="481.0" prefHeight="27.0" prefWidth="143.0" />
       <TextField fx:id="ipInput" layoutX="173.0" layoutY="517.0" text="127.0.0.1" />
       <Label fx:id="countLabel" layoutX="185.0" layoutY="481.0" prefHeight="27.0" prefWidth="143.0" text="黒:2 白:2" />
-      <Button fx:id="test" layoutX="-1.0" layoutY="356.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="49.0" text="test" />
    </children>
 </AnchorPane>

@@ -31,10 +31,6 @@ class OseloController(val board: GridPane, val statusLabel:Label, val connectBut
   initMap()
   //MainGUI.setEvents(server, client)
 
-  test.onMouseClicked = (_: MouseEvent) =>{
-    _println("Debug:")
-  }
-
   serverButton.onMouseClicked = (_: MouseEvent) =>{
     server.start()
     isServer = true
@@ -66,21 +62,27 @@ class OseloController(val board: GridPane, val statusLabel:Label, val connectBut
     posX = (e.x / 54).asInstanceOf[Int]
     posY = (e.y / 54).asInstanceOf[Int]
     if (gameObj.flag) {
+      if(isServer) gameObj.searchReversible("Black") else gameObj.searchReversible("White")
+      if(gameObj.reversible.isEmpty){ //検索した結果空ならばパスとなる
+        gameObj.flag = !gameObj.flag //相手に番を渡す。
+        gui.changeVictoryLabel("相手の番")
+        if(isServer) server.sendMsg("pass") else client.sendMsg("pass")
+      }
+
       if(gameObj.checkPut(posX, posY)) {
         gameObj.playPutSound
         if (isServer) {
+          gameObj.piecesList(posX)(posY) = Some("Black")
           gameObj.reverse(posX, posY)
           server.sendMsg(posX.toString + "," + posY.toString)
           gui.createCircle(posX, posY, Black)
           //gui.createCandidateCircle(posX+1, posY+1)
-          println(board.children)
-          gameObj.piecesList(posX)(posY) = Some("Black")
           gameObj.flag = false
         } else {
+          gameObj.piecesList(posX)(posY) = Some("White")
           gameObj.reverse(posX, posY)
           client.sendMsg(posX.toString + "," + posY.toString)
           gui.createCircle(posX, posY, White)
-          gameObj.piecesList(posX)(posY) = Some("White")
           gameObj.flag = false
         }
         gameObj.judgeVictory(victoryLabel)

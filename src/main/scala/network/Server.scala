@@ -60,15 +60,19 @@ class Server(val port: Int, val board: GridPane, val gameObj: GameObject, val gu
   def receiveMsg: Unit ={
     while (isActive) {
       clientMsg = br.readLine()
-      tmpArr = clientMsg.split(",")
-      gameObj.piecesList(tmpArr(0).toInt)(tmpArr(1).toInt) = Some("White")
-      gameObj.flag = true
-      Platform.runLater(() -> gui.createCircle(tmpArr(0).toInt, tmpArr(1).toInt, White))
-      Platform.runLater(() -> gameObj.reverse(tmpArr(0).toInt, tmpArr(1).toInt))
-      Platform.runLater(() -> gui.changeVictoryLabel("あなたの番"))
-      Platform.runLater(() -> gameObj.judgeVictory(gui.victoryLabel))
-      gameObj.searchReversible("Black")
-      gameObj.playPutSound()
+      if(clientMsg == "pass"){
+        gameObj.flag = true
+        Platform.runLater(() -> gui.changeVictoryLabel("あなたの番"))
+      }else {
+        tmpArr = clientMsg.split(",")
+        gameObj.piecesList(tmpArr(0).toInt)(tmpArr(1).toInt) = Some("White")
+        gameObj.flag = true
+        Platform.runLater(() -> gui.createCircle(tmpArr(0).toInt, tmpArr(1).toInt, White))
+        Platform.runLater(() -> gameObj.reverse(tmpArr(0).toInt, tmpArr(1).toInt))
+        Platform.runLater(() -> gui.changeVictoryLabel("あなたの番"))
+        Platform.runLater(() -> gameObj.judgeVictory(gui.victoryLabel))
+        gameObj.playPutSound()
+      }
     }
   }
 
